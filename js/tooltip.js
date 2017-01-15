@@ -7,6 +7,297 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
+/*
+---
+name: Tooltip
+category: JavaScript
+---
+
+Inspired by the excellent jQuery.tipsy plugin written by Jason Frame; Tooltips are an updated version, which don't rely on images, use CSS3 for animations, and data-attributes for local title storage.
+
+Tooltips with zero-length titles are never displayed.
+
+Examples
+--------
+Hover over the links below to see tooltips:
+
+```paragraph.html,hidden
+<p>Tight pants next level keffiyeh <a href="#" data-toggle="tooltip" title="Default tooltip">you probably</a> haven't heard of them. Photo booth beard raw denim letterpress vegan messenger bag stumptown. Farm-to-table seitan, mcsweeney's fixie sustainable quinoa 8-bit american apparel <a href="#" data-toggle="tooltip" title="Another tooltip">have a</a> terry richardson vinyl chambray. Beard stumptown, cardigans banh mi lomo thundercats. Tofu biodiesel williamsburg marfa, four loko mcsweeney's cleanse vegan chambray. A really ironic artisan <a href="#" data-toggle="tooltip" title="Another one here too">whatever keytar</a>, scenester farm-to-table banksy Austin <a href="#" data-toggle="tooltip" title="The last tip!">twitter handle</a> freegan cred raw denim single-origin coffee viral.</p>
+```
+```paragraph.js,hidden
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+```
+
+### Static tooltip
+Four options are available: top, right, bottom, and left aligned.
+
+```static.html,hidden
+<div class="tooltip left" role="tooltip">
+  <div class="tooltip-arrow"></div>
+  <div class="tooltip-inner">
+    Tooltip on the left
+  </div>
+</div>
+<div class="tooltip top" role="tooltip">
+  <div class="tooltip-arrow"></div>
+  <div class="tooltip-inner">
+    Tooltip on the top
+  </div>
+</div>
+<div class="tooltip bottom" role="tooltip">
+  <div class="tooltip-arrow"></div>
+  <div class="tooltip-inner">
+    Tooltip on the bottom
+  </div>
+</div>
+<div class="tooltip right" role="tooltip">
+  <div class="tooltip-arrow"></div>
+  <div class="tooltip-inner">
+    Tooltip on the right
+  </div>
+</div>
+```
+```static.css,hidden
+.tooltip {
+  position: relative;
+  display: inline-block;
+  margin: 10px 20px;
+  opacity: 1;
+}
+```
+
+### Four directions
+
+```directions.html
+<button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="left" title="Tooltip on left">Tooltip on left</button>
+
+<button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Tooltip on top">Tooltip on top</button>
+
+<button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom">Tooltip on bottom</button>
+
+<button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="right" title="Tooltip on right">Tooltip on right</button>
+```
+```directions.js,hidden
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+```
+
+#### Opt-in functionality
+For performance reasons, the Tooltip and Popover data-apis are opt-in, meaning you must initialize them yourself.
+
+One way to initialize all tooltips on a page would be to select them by their data-toggle attribute:
+```js
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+```
+
+Usage
+-----
+The tooltip plugin generates content and markup on demand, and by default places tooltips after their trigger element.
+
+Trigger the tooltip via JavaScript:
+```js
+$('#example').tooltip(options)
+```
+
+Markup
+------
+The required markup for a tooltip is only a `data` attribute and `title` on the HTML element you wish to have a tooltip. The generated markup of a tooltip is rather simple, though it does require a position (by default, set to `top` by the plugin).
+
+```html
+<!-- HTML to write -->
+<a href="#" data-toggle="tooltip" title="Some tooltip text!">Hover over me</a>
+
+<!-- Generated markup by the plugin -->
+<div class="tooltip top" role="tooltip">
+  <div class="tooltip-arrow"></div>
+  <div class="tooltip-inner">
+    Some tooltip text!
+  </div>
+</div>
+```
+
+#### Multiple-line links
+Sometimes you want to add a tooltip to a hyperlink that wraps multiple lines. The default behavior of the tooltip plugin is to center it horizontally and vertically. Add white-space: nowrap; to your anchors to avoid this.
+
+#### Tooltips in button groups, input groups, and tables require special setting
+When using tooltips on elements within a `.btn-group` or an `.input-group`, or on table-related elements (`<td>`, `<th>`, `<tr>`, `<thead>`, `<tbody>`, `<tfoot>`), you'll have to specify the option `container: 'body'` (documented below) to avoid unwanted side effects (such as the element growing wider and/or losing its rounded corners when the tooltip is triggered).
+
+#### Don't try to show tooltips on hidden elements
+Invoking `$(...).tooltip('show')` when the target element is `display: none;` will cause the tooltip to be incorrectly positioned.
+
+#### Accessible tooltips for keyboard and assistive technology users
+For users navigating with a keyboard, and in particular users of assistive technologies, you should only add tooltips to keyboard-focusable elements such as links, form controls, or any arbitrary element with a `tabindex="0"` attribute.
+
+#### Tooltips on disabled elements require wrapper elements
+To add a tooltip to a `disabled` or `.disabled` element, put the element inside of a `<div>` and apply the tooltip to that `<div>` instead.
+
+Options
+-------
+Options can be passed via data attributes or JavaScript. For data attributes, append the option name to `data-`, as in `data-animation=""`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tr>
+    <td>animation</td>
+    <td>`boolean`</td>
+    <td>`true`</td>
+    <td>
+      Apply a CSS fade transition to the tooltip
+    </td>
+  </tr>
+  <tr>
+    <td>container</td>
+    <td>`string | false`</td>
+    <td>`false`</td>
+    <td>
+      Appends the tooltip to a specific element. Example: `container: 'body'`. This option is particularly useful in that it allows you to position the tooltip in the flow of the document near the triggering element - which will prevent the tooltip from floating away from the triggering element during a window resize.
+    </td>
+  </tr>
+  <tr>
+    <td>delay</td>
+    <td>`number | object`</td>
+    <td>`0`</td>
+    <td>
+      Delay showing and hiding the tooltip (ms) - does not apply to manual trigger type
+      <br><br>
+      If a number is supplied, delay is applied to both hide/show
+      <br><br>
+      Object structure is: `delay: { "show": 500, "hide": 100 }`
+    </td>
+  </tr>
+  <tr>
+    <td>html</td>
+    <td>`boolean`</td>
+    <td>`false`</td>
+    <td>
+      Insert HTML into the tooltip. If false, jQuery's `text` method will be used to insert content into the DOM. Use text if you're worried about XSS attacks.
+    </td>
+  </tr>
+  <tr>
+    <td>placement</td>
+    <td>`string | function`</td>
+    <td>`'top'`</td>
+    <td>
+      How to position the tooltip - `top | bottom | left | right | auto`.
+      <br><br>
+      When "auto" is specified, it will dynamically reorient the tooltip. For example, if placement is "auto left", the tooltip will display to the left when possible, otherwise it will display right.
+      <br><br>
+      When a function is used to determine the placement, it is called with the tooltip DOM node as its first argument and the triggering element DOM node as its second. The `this` context is set to the tooltip instance.
+    </td>
+  </tr>
+  <tr>
+    <td>selector</td>
+    <td>`string`</td>
+    <td>`false`</td>
+    <td>
+      If a selector is provided, tooltip objects will be delegated to the specified targets. In practice, this is used to enable dynamic HTML content to have tooltips added. See [this](https://github.com/twbs/bootstrap/issues/4215) and [an informative example](http://jsbin.com/zopod/1/edit).
+    </td>
+  </tr>
+  <tr>
+    <td>template</td>
+    <td>`string`</td>
+    <td>`'<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'`</td>
+    <td>
+      Base HTML to use when creating the tooltip.
+      <br><br>
+      The tooltip's `title` will be injected into the `.tooltip-inner`.
+      <br><br>
+      `.tooltip-arrow` will become the tooltip's arrow.
+      <br><br>
+      The outermost wrapper element should have the `.tooltip` class.
+    </td>
+  </tr>
+  <tr>
+    <td>title</td>
+    <td>`string | function`</td>
+    <td>`''`</td>
+    <td>
+      Default title value if `title` attribute isn't present.
+      <br><br>
+      If a function is given, it will be called with its `this` reference set to the element that the tooltip is attached to.
+    </td>
+  </tr>
+  <tr>
+    <td>trigger</td>
+    <td>`string`</td>
+    <td>`'hover focus'`</td>
+    <td>
+      How tooltip is triggered - `click | hover | focus | manual`. You may pass multiple triggers; separate them with a space. `manual` cannot be combined with any other trigger.
+    </td>
+  </tr>
+  <tr>
+    <td>viewport</td>
+    <td>`string | object | function`</td>
+    <td>`{ selector: 'body', padding: 0 }`</td>
+    <td>
+      Keeps the tooltip within the bounds of this element. Example: `viewport: '#viewport'` or `{ "selector": "#viewport", "padding": 0 }`
+      <br><br>
+      If a function is given, it is called with the triggering element DOM node as its only argument. The `this` context is set to the tooltip instance.
+    </td>
+  </tr>
+</table>
+
+#### Data attributes for individual tooltips
+Options for individual tooltips can alternatively be specified through the use of data attributes, as explained above.
+
+Methods
+-------
+#### `$().tooltip(options)`
+Attaches a tooltip handler to an element collection.
+
+#### `.tooltip('show')`
+Reveals an element's tooltip. **Returns to the caller before the tooltip has actually been shown** (i.e. before the `shown.bs.tooltip` event occurs). This is considered a "manual" triggering of the tooltip. Tooltips with zero-length titles are never displayed.
+```js
+$('#element').tooltip('show')
+```
+#### `.tooltip('hide')`
+Hides an element's tooltip. **Returns to the caller before the tooltip has actually been hidden** (i.e. before the `hidden.bs.tooltip` event occurs). This is considered a "manual" triggering of the tooltip.
+```js
+$('#element').tooltip('hide')
+```
+
+#### `.tooltip('toggle')`
+Toggles an element's tooltip. **Returns to the caller before the tooltip has actually been shown or hidden** (i.e. before the `shown.bs.tooltip` or `hidden.bs.tooltip` event occurs). This is considered a "manual" triggering of the tooltip.
+```js
+$('#element').tooltip('toggle')
+```
+
+#### `.tooltip('destroy')`
+Hides and destroys an element's tooltip. Tooltips that use delegation (which are created using the `selector` option) cannot be individually destroyed on descendant trigger elements.
+```js
+$('#element').tooltip('destroy')
+```
+
+Events
+------
+
+Event Type | Description
+--- | ---
+`show.bs.tooltip` | This event fires immediately when the `show` instance method is called.
+`shown.bs.tooltip` |  This event is fired when the tooltip has been made visible to the user (will wait for CSS transitions to complete).
+`hide.bs.tooltip` | This event is fired immediately when the `hide` instance method has been called.
+`hidden.bs.tooltip` | This event is fired when the tooltip has finished being hidden from the user (will wait for CSS transitions to complete).
+`inserted.bs.tooltip` | This event is fired after the `show.bs.tooltip` event when the tooltip template has been added to the DOM.
+
+```js
+$('#myTooltip').on('hidden.bs.tooltip', function () {
+  // do something…
+})
+```
+*/
+
 
 +function ($) {
   'use strict';
